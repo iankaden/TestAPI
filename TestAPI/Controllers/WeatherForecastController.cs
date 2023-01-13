@@ -14,9 +14,7 @@ namespace TestAPI.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IConfiguration _configuration;
         
-        return localize;
-    
-
+       
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             _logger = logger;
