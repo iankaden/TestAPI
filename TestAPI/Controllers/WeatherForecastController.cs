@@ -13,12 +13,13 @@ namespace TestAPI.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IConfiguration _configuration;
-        
+        private test_nuget.Class1 _someClass;
        
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            _someClass = new test_nuget.Class1();
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
