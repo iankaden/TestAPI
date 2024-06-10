@@ -1,0 +1,51 @@
+name: "Build .Net Core"
+description: "Provides generalized building capabilities for .NET Core workloads"
+
+inputs:
+  build_instructions:
+    description: "Flags for building .NET Core projects"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Detect projects
+      shell: bash
+      run: |
+        echo -e "Detecting Projects...\n"
+        matching_files="$(find . -name "*.sln")"
+
+        if [[ -z "$matching_files" ]]; then
+          matching_files="$(find . -name "*.csproj")"
+        fi
+
+        echo "Detected Projects:"
+        echo -e "$matching_files\n"
+
+        echo "MATCHING_FILES<<EOF" >> $GITHUB_ENV
+        echo "$matching_files" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
+    - name: Run dotnet restore
+      shell: bash
+      run: |
+        echo "Running Restore on Detected Projects..."
+        PATHS=( ${{ env.MATCHING_FILES }} )
+
+        for path in "${PATHS[@]}"; do
+          echo "Running Restore on: $path"
+          dotnet restore $path
+        done
+
+    - name: Run dotnet build
+      shell: bash
+      run: |
+        echo "Running Build on Detected Projects..."
+        PATHS=( ${{ env.MATCHING_FILES }} )
+        echo "Build Instructions: ${{ inputs.build_instructions }}"
+
+        for path in "${PATHS[@]}"; do
+          echo "Running Build on: $path"
+          dotnet build $path ${{ inputs.build_instructions }}
+        done
