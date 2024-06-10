@@ -44,7 +44,7 @@ jobs:
       # If the code is .NET Core, then build it
       - name: "Build Code (.NET Core)"
         if: inputs.code_language == 'csharp' && inputs.csharp_mode == 'core'
-        uses: .github/actions/build-dotnet-core@version/1.3
+        uses: ./.github/actions/build-dotnet-core
         with:
           build_instructions: ${{ inputs.build_instructions }}
         env:
