@@ -9,7 +9,7 @@ on:
 jobs:
   codeql_csharp:
     name: "Run CodeQL (CSharp)"
-    uses: telus-agcg/ci-pipeline-templates/.github/workflows/codeql-analysis-template.yml@version/1.3
+    uses: .github/workflows/codeql-analysis-template.yml@version/1.3
     with:
       agent_os: "ubuntu-latest"
       code_language: "csharp"
