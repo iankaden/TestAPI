@@ -44,19 +44,12 @@ jobs:
       # If the code is .NET Core, then build it
       - name: "Build Code (.NET Core)"
         if: inputs.code_language == 'csharp' && inputs.csharp_mode == 'core'
-        uses: telus-agcg/ci-pipeline-templates/.github/actions/build-dotnet-core@version/1.3
+        uses: .github/actions/build-dotnet-core@version/1.3
         with:
           build_instructions: ${{ inputs.build_instructions }}
         env:
           Nuget_ClearTextPassword: ${{ secrets.package_key }}
-
-      # If the code is .NET Framework, then build it
-      - name: "Build Code (.NET Framework)"
-        if: inputs.code_language == 'csharp' && inputs.csharp_mode == 'framework'
-        uses: telus-agcg/ci-pipeline-templates/.github/actions/build-dotnet-framework@version/1.3
-        with:
-          build_instructions: ${{ inputs.build_instructions }}
-
+  
       # Start the CodeQL Scan
       - name: Run CodeQL Scan
         uses: github/codeql-action/analyze@v2
