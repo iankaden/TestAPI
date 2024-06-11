@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
 
 permissions: write-all
-  
+
 jobs:  
-  codeql_csharp:
+ one:
     runs-on: ubuntu-latest
-    name: "Test Env variable"
-    env:
-        GITHUB_CONTEXT: ${{ secrets.NUGET_GITHUB_PAT }}
-        run: echo "$GITHUB_CONTEXT"    
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ secrets.NUGET_GITHUB_PAT }}
+        run: echo "$GITHUB_CONTEXT"
