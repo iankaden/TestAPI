@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TKXS.DCP.Core.ErrorHandling;
 
 namespace TestAPI.Controllers
 {
@@ -13,13 +14,15 @@ namespace TestAPI.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IConfiguration _configuration;
-        private test_nuget.Class1 _someClass;
+        //private test_nuget.Class1 _someClass;
+        private readonly TKXS.DCP.Core.ArchiveType _archiveType;
        
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _someClass = new test_nuget.Class1();
+            //_someClass = new test_nuget.Class1();
+            _archiveType = TKXS.DCP.Core.ArchiveType.Zip;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
