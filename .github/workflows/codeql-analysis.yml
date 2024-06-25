@@ -18,7 +18,7 @@ env:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ${{ inputs.agent_os }}
+    runs-on: windows-latest
 
     strategy:
       fail-fast: false
