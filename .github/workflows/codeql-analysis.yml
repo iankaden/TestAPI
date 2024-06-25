@@ -13,7 +13,7 @@ env:
   solution_file: 'TestAPI.sln'
   nuget_feed_name: 'TKXS_Feed'
   nuget_feed_source: 'https://pkgs.dev.azure.com/tkxs/_packaging/TKXS/nuget/v3/index.json'
-  nuget_config: '.nuget/NuGet.Config'
+  nuget_config: './NuGet.Config'
   
 jobs:
   analyze:
@@ -43,11 +43,7 @@ jobs:
 
     - name: Auth NuGet
       run: | 
-        dotnet nuget add source ${{ env.nuget_feed_source }} \
-          --name ${{ env.nuget_feed_name }} \
-          --username az \
-          --password ${{ secrets.AZURE_DEVOPS_TOKEN }} \
-          --configfile ${{ env.nuget_config }}
+        dotnet nuget add source ${{ env.nuget_feed_source }} --name ${{ env.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ env.nuget_config }}
      
     - name: Restore NuGet Packages
       run: dotnet restore ${{ env.solution_file_path }}
