@@ -1,20 +1,61 @@
-name: "CodeQL Workflow"
+name: "CodeQL"
 
 on:
   push:
-    branches: ["master"]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
   schedule:
-    - cron: "0 16 * * *"
+    - cron: '19 0 * * 2'
+  workflow_dispatch:  # manual trigger
 
-permissions: write-all
+env:
+  solution_file: 'TestAPI.sln'
+  nuget_feed_name: 'TKXS-Feed'
+  nuget_feed_source: 'https://pkgs.dev.azure.com/tkxs/_packaging/TKXS/nuget/v3/index.json'
+  nuget_config: '.nuget/NuGet.Config'
   
 jobs:
-  codeql_csharp:
-    name: "Run CodeQL (CSharp)"
-    uses: ./.github/workflows/codeql-analysis-template.yml
-    with:
-      agent_os: "ubuntu-latest"
-      code_language: "csharp"
-      csharp_mode: "core"
-    secrets:
-      package_key: ${{ secrets.NUGET_GITHUB_PAT }}
+  analyze:
+    name: Analyze
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    # # If exists, remove existing AzDO NuGet source that doesn't have authentication
+    # - name: Remove existing entry from NuGet config
+    #   run: | 
+    #     dotnet nuget remove source ${{ env.nuget_feed_name }} \
+    #       --configfile ${{ env.nuget_config }}
+
+    - name: Auth NuGet
+      run: | 
+        dotnet nuget add source ${{ env.nuget_feed_source }} \
+          --name ${{ env.nuget_feed_name }} \
+          --username az \
+          --password ${{ secrets.AZURE_DEVOPS_TOKEN }} \
+          --configfile ${{ env.nuget_config }}
+     
+    - name: Restore NuGet Packages
+      run: dotnet restore ${{ env.solution_file_path }}
+    
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
